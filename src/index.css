@@ -1,0 +1,103 @@
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap');
+@import "tailwindcss";
+
+@theme {
+  /* ── Navy ramp ── */
+  --color-navy-50:  #EEF1F8;
+  --color-navy-100: #CDD5EC;
+  --color-navy-200: #9BACD9;
+  --color-navy-300: #6982C0;
+  --color-navy-400: #3B5BA5;
+  --color-navy-500: #1B3A7A;
+  --color-navy-600: #152E63;
+  --color-navy-700: #0F224B;
+  --color-navy-800: #0A1733;
+  --color-navy-900: #060E1E;
+
+  /* ── Gold ramp ── */
+  --color-gold-100: #FDF3D7;
+  --color-gold-200: #F9E0A0;
+  --color-gold-300: #F4CA68;
+  --color-gold-400: #EFBA3A;
+  --color-gold-500: #D9A020;
+  --color-gold-600: #B07E14;
+  --color-gold-700: #7D590D;
+
+  /* ── Neutral / canvas ── */
+  --color-cream:      #FAF7F2;
+  --color-cream-dark: #F0EBE1;
+  --color-ink:        #0F1825;
+  --color-ink-muted:  #4A5568;
+
+  /* ── Semantic ── */
+  --color-success: #1B6B3A;
+  --color-danger:  #C0392B;
+
+  /* ── Fonts ── */
+  --font-display: 'Fraunces', serif;
+  --font-sans:    'Inter', system-ui, sans-serif;
+  --font-mono:    'JetBrains Mono', ui-monospace, monospace;
+}
+
+/* ── Light mode ── */
+:root {
+  --bg:          var(--color-cream);
+  --bg-subtle:   var(--color-cream-dark);
+  --bg-inverse:  var(--color-navy-800);
+  --text:        var(--color-ink);
+  --text-muted:  var(--color-ink-muted);
+  --text-inverse:#FAF7F2;
+  --border:      rgba(27, 58, 122, 0.12);
+  --border-mid:  rgba(27, 58, 122, 0.22);
+}
+
+/* ── Dark mode ── */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg:          #0F1825;
+    --bg-subtle:   #162035;
+    --bg-inverse:  #060E1E;
+    --text:        #EEF1F8;
+    --text-muted:  #8FA3C8;
+    --text-inverse:#0F1825;
+    --border:      rgba(147, 176, 230, 0.10);
+    --border-mid:  rgba(147, 176, 230, 0.20);
+  }
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: background 0.25s, color 0.25s;
+}
+
+::selection {
+  background: var(--color-gold-300);
+  color: var(--color-navy-900);
+}
+
+@keyframes ticker {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.animate-ticker {
+  animation: ticker 40s linear infinite;
+}
+.animate-ticker:hover {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
