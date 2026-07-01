@@ -9,9 +9,9 @@ const LGAS = ['Barkin Ladi','Bassa','Bokkos','Jos East','Jos North','Jos South',
 
 function Section({ title, children }) {
   return (
-    <div className="bg-[var(--bg)] rounded-2xl border border-[var(--border)] overflow-hidden">
-      <div className="px-6 py-4 border-b border-[var(--border)] bg-[var(--bg-subtle)]">
-        <h2 className="text-[15px] font-medium text-[var(--text)]">{title}</h2>
+    <div className="bg-(--bg) rounded-2xl border border-(--border) overflow-hidden">
+      <div className="px-6 py-4 border-b border-(--border) bg-(--bg-subtle)">
+        <h2 className="text-[15px] font-medium text-(--text)">{title}</h2>
       </div>
       <div className="p-6">{children}</div>
     </div>
@@ -22,11 +22,11 @@ function Toggle({ checked, onChange, label, sub }) {
   return (
     <div className="flex items-center justify-between gap-4 py-3">
       <div>
-        <p className="text-[14px] font-medium text-[var(--text)]">{label}</p>
-        {sub && <p className="text-[13px] text-[var(--text-muted)] mt-0.5">{sub}</p>}
+        <p className="text-[14px] font-medium text-(--text)">{label}</p>
+        {sub && <p className="text-[13px] text-(--text-muted) mt-0.5">{sub}</p>}
       </div>
       <button onClick={() => onChange(!checked)}
-        className={`relative w-11 h-6 rounded-full transition-colors shrink-0 ${checked ? 'bg-navy-600' : 'bg-[var(--border-mid)]'}`}>
+        className={`relative w-11 h-6 rounded-full transition-colors shrink-0 ${checked ? 'bg-navy-600' : 'bg-(--border-mid)'}`}>
         <span className={`absolute top-1 w-4 h-4 rounded-full bg-white shadow transition-all ${checked ? 'left-6' : 'left-1'}`} />
       </button>
     </div>
@@ -46,10 +46,10 @@ export default function BuyerSettings() {
 
   return (
     <BuyerLayout title="Settings">
-      <div className="px-6 lg:px-8 py-8 max-w-[720px] mx-auto space-y-5">
+      <div className="px-6 lg:px-8 py-8 max-w-180 mx-auto space-y-5">
         <div className="mb-7">
           <h1 className="font-display text-[26px] font-medium text-navy-700 dark:text-navy-100">Settings</h1>
-          <p className="text-[14px] text-[var(--text-muted)] mt-1">Manage your profile and preferences.</p>
+          <p className="text-[14px] text-(--text-muted) mt-1">Manage your profile and preferences.</p>
         </div>
 
         {saved && (
@@ -65,8 +65,8 @@ export default function BuyerSettings() {
                 {buyerProfile.avatar}
               </div>
               <div>
-                <p className="text-[14px] font-medium text-[var(--text)]">{buyerProfile.name}</p>
-                <p className="text-[13px] text-[var(--text-muted)]">Member since {buyerProfile.memberSince}</p>
+                <p className="text-[14px] font-medium text-(--text)">{buyerProfile.name}</p>
+                <p className="text-[13px] text-(--text-muted)">Member since {buyerProfile.memberSince}</p>
                 <button className="text-[13px] text-navy-600 dark:text-gold-400 hover:underline mt-1">Change photo</button>
               </div>
             </div>
@@ -98,7 +98,7 @@ export default function BuyerSettings() {
         </Section>
 
         <Section title="Notifications">
-          <div className="divide-y divide-[var(--border)]">
+          <div className="divide-y divide-(--border)">
             <Toggle label="Order updates"     sub="Notify when your order status changes"         checked={notifs.orderUpdates}   onChange={setN('orderUpdates')}   />
             <Toggle label="Farmer responses"  sub="Alert when a farmer responds to your order"    checked={notifs.offerResponses} onChange={setN('offerResponses')} />
             <Toggle label="Price alerts"      sub="Notify when market prices change significantly" checked={notifs.priceAlerts}    onChange={setN('priceAlerts')}    />

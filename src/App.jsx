@@ -1,7 +1,10 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { AuthProvider } from './lib/AuthContext'
 
+// Landing
 import LandingPage     from './pages/landing/LandingPage'
+
+// Auth
 import ChooseRole      from './pages/auth/ChooseRole'
 import Register        from './pages/auth/Register'
 import VerifyOtp       from './pages/auth/VerifyOtp'
@@ -10,6 +13,7 @@ import KycUpload       from './pages/auth/KycUpload'
 import KycPending      from './pages/auth/KycPending'
 import Login           from './pages/auth/Login'
 
+// Farmer
 import FarmerDashboard from './pages/farmer/FarmerDashboard'
 import NewListing      from './pages/farmer/NewListing'
 import MyListings      from './pages/farmer/MyListings'
@@ -19,11 +23,21 @@ import Logistics       from './pages/farmer/Logistics'
 import Reviews         from './pages/farmer/Reviews'
 import Settings        from './pages/farmer/Settings'
 
+// Buyer
+import BuyerDashboard  from './pages/buyer/BuyerDashboard'
+import BrowseProduce   from './pages/buyer/BrowseProduce'
+import BuyerOrders     from './pages/buyer/BuyerOrders'
+import SavedListings   from './pages/buyer/SavedListings'
+import BuyerPrices     from './pages/buyer/BuyerPrices'
+import BuyerMessages   from './pages/buyer/BuyerMessages'
+import BuyerSettings   from './pages/buyer/BuyerSettings'
+
 export default function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
         <Routes>
+          {/* Public */}
           <Route path="/"                    element={<LandingPage />} />
 
           {/* Auth */}
@@ -35,7 +49,7 @@ export default function App() {
           <Route path="/auth/kyc-pending"    element={<KycPending />} />
           <Route path="/auth/login"          element={<Login />} />
 
-          {/* Farmer — all pages complete */}
+          {/* Farmer */}
           <Route path="/farmer/dashboard"    element={<FarmerDashboard />} />
           <Route path="/farmer/listings/new" element={<NewListing />} />
           <Route path="/farmer/listings"     element={<MyListings />} />
@@ -45,13 +59,16 @@ export default function App() {
           <Route path="/farmer/reviews"      element={<Reviews />} />
           <Route path="/farmer/settings"     element={<Settings />} />
 
-          {/* Buyer — next phase */}
-          <Route path="/buyer/*" element={
-            <div className="min-h-screen flex items-center justify-center font-display text-2xl text-navy-700 dark:text-navy-200">
-              Buyer Dashboard — coming next
-            </div>
-          } />
+          {/* Buyer */}
+          <Route path="/buyer/dashboard"     element={<BuyerDashboard />} />
+          <Route path="/buyer/browse"        element={<BrowseProduce />} />
+          <Route path="/buyer/orders"        element={<BuyerOrders />} />
+          <Route path="/buyer/saved"         element={<SavedListings />} />
+          <Route path="/buyer/prices"        element={<BuyerPrices />} />
+          <Route path="/buyer/messages"      element={<BuyerMessages />} />
+          <Route path="/buyer/settings"      element={<BuyerSettings />} />
 
+          {/* Fallback */}
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </BrowserRouter>

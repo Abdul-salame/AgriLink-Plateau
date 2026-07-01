@@ -25,10 +25,10 @@ function StatusBadge({ status }) {
 
 function StatCard({ stat }) {
   return (
-    <div className="bg-[var(--bg)] rounded-2xl border border-[var(--border)] p-5 flex flex-col gap-3">
-      <p className="text-[13px] text-[var(--text-muted)]">{stat.label}</p>
+    <div className="bg-(--bg) rounded-2xl border border-(--border) p-5 flex flex-col gap-3">
+      <p className="text-[13px] text-(--text-muted)">{stat.label}</p>
       <p className="font-display text-[28px] font-medium text-navy-700 dark:text-navy-100 leading-none">{stat.value}</p>
-      <p className={`text-[12.5px] flex items-center gap-1 ${stat.trend === 'up' ? 'text-green-600 dark:text-green-400' : 'text-[var(--text-muted)]'}`}>
+      <p className={`text-[12.5px] flex items-center gap-1 ${stat.trend === 'up' ? 'text-green-600 dark:text-green-400' : 'text-(--text-muted)'}`}>
         {stat.trend === 'up' && <TrendingUp size={13} />}{stat.sub}
       </p>
     </div>
@@ -37,7 +37,7 @@ function StatCard({ stat }) {
 
 function ProduceCard({ item }) {
   return (
-    <div className="bg-[var(--bg)] rounded-2xl border border-[var(--border)] p-4 flex flex-col gap-3 hover:border-[var(--border-mid)] transition-colors">
+    <div className="bg-(--bg) rounded-2xl border border-(--border) p-4 flex flex-col gap-3 hover:border-(--border-mid) transition-colors">
       <div className="flex items-start justify-between gap-2">
         <div className="w-10 h-10 rounded-xl bg-navy-50 dark:bg-navy-800 flex items-center justify-center text-[20px] shrink-0">🌱</div>
         {item.verified && (
@@ -45,15 +45,15 @@ function ProduceCard({ item }) {
         )}
       </div>
       <div>
-        <p className="text-[14.5px] font-medium text-[var(--text)]">{item.produce}</p>
-        <p className="text-[12.5px] text-[var(--text-muted)] mt-0.5">{item.farmer} · {item.lga}</p>
+        <p className="text-[14.5px] font-medium text-(--text)">{item.produce}</p>
+        <p className="text-[12.5px] text-(--text-muted) mt-0.5">{item.farmer} · {item.lga}</p>
         <div className="flex items-center gap-1 mt-1">
           <Star size={12} className="text-gold-400 fill-gold-400" />
-          <span className="text-[12px] text-[var(--text-muted)]">{item.rating} ({item.reviews})</span>
+          <span className="text-[12px] text-(--text-muted)">{item.rating} ({item.reviews})</span>
         </div>
       </div>
       <div className="flex items-center justify-between">
-        <span className="font-mono text-[14px] font-medium text-navy-700 dark:text-gold-400">{fmt(item.price)}<span className="text-[var(--text-muted)] font-normal text-[12px]">/{item.unit}</span></span>
+        <span className="font-mono text-[14px] font-medium text-navy-700 dark:text-gold-400">{fmt(item.price)}<span className="text-(--text-muted) font-normal text-[12px]">/{item.unit}</span></span>
         <Button as={Link} to="/buyer/browse" variant="primary" size="sm">Order</Button>
       </div>
     </div>
@@ -67,13 +67,13 @@ export default function BuyerDashboard() {
 
   return (
     <BuyerLayout title="Dashboard">
-      <div className="p-6 lg:p-8 max-w-[1280px] mx-auto space-y-7">
+      <div className="p-6 lg:p-8 max-w-7xl mx-auto space-y-7">
 
         {/* Greeting */}
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
-            <h2 className="font-display text-[26px] font-medium text-navy-700 dark:text-navy-100">Good morning, {buyerProfile.firstName} 👋</h2>
-            <p className="text-[14px] text-[var(--text-muted)] mt-1">{today}</p>
+            <h2 className="font-display text-[26px] font-medium text-navy-700 dark:text-navy-100">Good morning, {buyerProfile.firstName} </h2>
+            <p className="text-[14px] text-(--text-muted) mt-1">{today}</p>
           </div>
           <Button as={Link} to="/buyer/browse" variant="accent" size="md">
             <ShoppingBasket size={16} /> Browse produce
@@ -92,10 +92,10 @@ export default function BuyerDashboard() {
           <div className="space-y-6">
 
             {/* Spending chart */}
-            <div className="bg-[var(--bg)] rounded-2xl border border-[var(--border)] p-6">
+            <div className="bg-(--bg) rounded-2xl border border-(--border) p-6">
               <div className="flex items-center justify-between mb-6">
-                <h3 className="font-medium text-[15px] text-[var(--text)]">Monthly spending</h3>
-                <span className="text-[13px] text-[var(--text-muted)]">Last 6 months</span>
+                <h3 className="font-medium text-[15px] text-(--text)">Monthly spending</h3>
+                <span className="text-[13px] text-(--text-muted)">Last 6 months</span>
               </div>
               <ResponsiveContainer width="100%" height={200}>
                 <AreaChart data={spendingChart} margin={{ top:4, right:4, left:0, bottom:0 }}>
@@ -115,16 +115,16 @@ export default function BuyerDashboard() {
             </div>
 
             {/* Recent orders */}
-            <div className="bg-[var(--bg)] rounded-2xl border border-[var(--border)] overflow-hidden">
-              <div className="flex items-center justify-between px-6 py-4 border-b border-[var(--border)]">
-                <h3 className="font-medium text-[15px] text-[var(--text)]">Recent orders</h3>
+            <div className="bg-(--bg) rounded-2xl border border-(--border) overflow-hidden">
+              <div className="flex items-center justify-between px-6 py-4 border-b border-(--border)">
+                <h3 className="font-medium text-[15px] text-(--text)">Recent orders</h3>
                 <Link to="/buyer/orders" className="text-[13px] text-navy-600 dark:text-gold-400 hover:underline flex items-center gap-1">View all <ArrowRight size={13} /></Link>
               </div>
               {/* Desktop */}
               <div className="hidden sm:block overflow-x-auto">
                 <table className="w-full text-left border-collapse">
                   <thead>
-                    <tr className="bg-[var(--bg-subtle)] text-[12.5px] text-[var(--text-muted)]">
+                    <tr className="bg-(--bg-subtle) text-[12.5px] text-(--text-muted)">
                       <th className="font-medium px-6 py-3">Order</th>
                       <th className="font-medium px-6 py-3">Farmer</th>
                       <th className="font-medium px-6 py-3">Produce</th>
@@ -134,11 +134,11 @@ export default function BuyerDashboard() {
                   </thead>
                   <tbody>
                     {recentOrders.map((o, i) => (
-                      <tr key={o.id} className={`hover:bg-[var(--bg-subtle)] transition-colors ${i < recentOrders.length-1 ? 'border-b border-[var(--border)]' : ''}`}>
-                        <td className="px-6 py-3.5 font-mono text-[13px] text-[var(--text-muted)]">{o.id}</td>
-                        <td className="px-6 py-3.5 text-[14px] font-medium text-[var(--text)]">{o.farmer}</td>
-                        <td className="px-6 py-3.5 text-[14px] text-[var(--text-muted)]">{o.produce}</td>
-                        <td className="px-6 py-3.5 font-mono text-[14px] text-[var(--text)]">{fmt(o.amount)}</td>
+                      <tr key={o.id} className={`hover:bg-(--bg-subtle) transition-colors ${i < recentOrders.length-1 ? 'border-b border-(--border)' : ''}`}>
+                        <td className="px-6 py-3.5 font-mono text-[13px] text-(--text-muted)">{o.id}</td>
+                        <td className="px-6 py-3.5 text-[14px] font-medium text-(--text)">{o.farmer}</td>
+                        <td className="px-6 py-3.5 text-[14px] text-(--text-muted)">{o.produce}</td>
+                        <td className="px-6 py-3.5 font-mono text-[14px] text-(--text)">{fmt(o.amount)}</td>
                         <td className="px-6 py-3.5"><StatusBadge status={o.status} /></td>
                       </tr>
                     ))}
@@ -146,15 +146,15 @@ export default function BuyerDashboard() {
                 </table>
               </div>
               {/* Mobile */}
-              <div className="sm:hidden divide-y divide-[var(--border)]">
+              <div className="sm:hidden divide-y divide-(--border)">
                 {recentOrders.map(o => (
                   <div key={o.id} className="px-5 py-4 flex items-start justify-between gap-3">
                     <div>
-                      <p className="text-[14px] font-medium text-[var(--text)]">{o.farmer}</p>
-                      <p className="text-[12.5px] text-[var(--text-muted)] mt-0.5">{o.produce} · {o.date}</p>
+                      <p className="text-[14px] font-medium text-(--text)">{o.farmer}</p>
+                      <p className="text-[12.5px] text-(--text-muted) mt-0.5">{o.produce} · {o.date}</p>
                     </div>
                     <div className="flex flex-col items-end gap-2">
-                      <span className="font-mono text-[14px] font-medium text-[var(--text)]">{fmt(o.amount)}</span>
+                      <span className="font-mono text-[14px] font-medium text-(--text)">{fmt(o.amount)}</span>
                       <StatusBadge status={o.status} />
                     </div>
                   </div>
@@ -167,8 +167,8 @@ export default function BuyerDashboard() {
           <div className="space-y-6">
 
             {/* Quick actions */}
-            <div className="bg-[var(--bg)] rounded-2xl border border-[var(--border)] p-5">
-              <h3 className="font-medium text-[15px] text-[var(--text)] mb-4">Quick actions</h3>
+            <div className="bg-(--bg) rounded-2xl border border-(--border) p-5">
+              <h3 className="font-medium text-[15px] text-(--text) mb-4">Quick actions</h3>
               <div className="grid grid-cols-2 gap-3">
                 {[
                   { label:'Browse produce', icon:ShoppingBasket, path:'/buyer/browse',   accent:true  },
@@ -178,7 +178,7 @@ export default function BuyerDashboard() {
                 ].map(a => (
                   <Link key={a.label} to={a.path}
                     className={`flex flex-col items-center gap-2 p-3.5 rounded-xl border transition-all text-center
-                      ${a.accent ? 'bg-navy-600 border-navy-600 text-white hover:bg-navy-700' : 'border-[var(--border)] text-[var(--text)] hover:border-[var(--border-mid)] hover:bg-[var(--bg-subtle)]'}`}>
+                      ${a.accent ? 'bg-navy-600 border-navy-600 text-white hover:bg-navy-700' : 'border-(--border) text-(--text) hover:border-(--border-mid) hover:bg-(--bg-subtle)'}`}>
                     <a.icon size={18} strokeWidth={2} />
                     <span className="text-[13px] font-medium">{a.label}</span>
                   </Link>
@@ -187,9 +187,9 @@ export default function BuyerDashboard() {
             </div>
 
             {/* Recommended produce */}
-            <div className="bg-[var(--bg)] rounded-2xl border border-[var(--border)] overflow-hidden">
-              <div className="flex items-center justify-between px-5 py-4 border-b border-[var(--border)]">
-                <h3 className="font-medium text-[15px] text-[var(--text)]">Recommended for you</h3>
+            <div className="bg-(--bg) rounded-2xl border border-(--border) overflow-hidden">
+              <div className="flex items-center justify-between px-5 py-4 border-b border-(--border)">
+                <h3 className="font-medium text-[15px] text-(--text)">Recommended for you</h3>
                 <Link to="/buyer/browse" className="text-[13px] text-navy-600 dark:text-gold-400 hover:underline flex items-center gap-1">See all <ArrowRight size={13} /></Link>
               </div>
               <div className="p-4 flex flex-col gap-3">

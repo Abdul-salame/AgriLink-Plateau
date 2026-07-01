@@ -38,11 +38,11 @@ export default function BuyerPrices() {
 
   return (
     <BuyerLayout title="Market Prices">
-      <div className="px-6 lg:px-8 py-8 max-w-[1000px] mx-auto">
+      <div className="px-6 lg:px-8 py-8 max-w-250 mx-auto">
         <div className="flex flex-wrap items-end justify-between gap-4 mb-7">
           <div>
             <h1 className="font-display text-[26px] font-medium text-navy-700 dark:text-navy-100">Market prices</h1>
-            <p className="text-[13.5px] text-[var(--text-muted)] mt-1 flex items-center gap-1.5"><RefreshCw size={13} /> Updated today · Plateau State local markets</p>
+            <p className="text-[13.5px] text-(--text-muted) mt-1 flex items-center gap-1.5"><RefreshCw size={13} /> Updated today · Plateau State local markets</p>
           </div>
         </div>
 
@@ -52,35 +52,35 @@ export default function BuyerPrices() {
             { label:'Rising today',  value:ALL_PRICES.filter(p=>p.change>0).length,   color:'text-green-600 dark:text-green-400' },
             { label:'Falling today', value:ALL_PRICES.filter(p=>p.change<0).length,   color:'text-red-500 dark:text-red-400'    },
           ].map(c => (
-            <div key={c.label} className="bg-[var(--bg)] rounded-2xl border border-[var(--border)] p-4">
+            <div key={c.label} className="bg-(--bg) rounded-2xl border border-(--border) p-4">
               <p className={`font-display text-[28px] font-medium leading-none ${c.color || 'text-navy-700 dark:text-navy-100'}`}>{c.value}</p>
-              <p className="text-[12.5px] text-[var(--text-muted)] mt-2">{c.label}</p>
+              <p className="text-[12.5px] text-(--text-muted) mt-2">{c.label}</p>
             </div>
           ))}
         </div>
 
         <div className="flex flex-wrap gap-3 mb-5">
-          <div className="flex items-center gap-2 h-10 px-3.5 rounded-xl border border-[var(--border)] bg-[var(--bg)] flex-1 max-w-xs">
-            <Search size={14} className="text-[var(--text-muted)]" />
+          <div className="flex items-center gap-2 h-10 px-3.5 rounded-xl border border-(--border) bg-(--bg) flex-1 max-w-xs">
+            <Search size={14} className="text-(--text-muted)" />
             <input type="text" placeholder="Search crop…" value={search} onChange={e => setSearch(e.target.value)}
-              className="flex-1 bg-transparent outline-none text-[14px] text-[var(--text)] placeholder:text-[var(--text-muted)]" />
+              className="flex-1 bg-transparent outline-none text-[14px] text-(--text) placeholder:text-(--text-muted)" />
           </div>
           <select value={region} onChange={e => setRegion(e.target.value)}
-            className="h-10 px-3.5 rounded-xl border border-[var(--border)] bg-[var(--bg)] text-[14px] text-[var(--text)] outline-none appearance-none cursor-pointer">
+            className="h-10 px-3.5 rounded-xl border border-(--border) bg-(--bg) text-[14px] text-(--text) outline-none appearance-none cursor-pointer">
             {REGIONS.map(r => <option key={r}>{r}</option>)}
           </select>
-          <div className="flex items-center gap-1 bg-[var(--bg)] border border-[var(--border)] rounded-xl p-1">
+          <div className="flex items-center gap-1 bg-(--bg) border border-(--border) rounded-xl p-1">
             {[['name','Name'],['price','Price'],['change','Change']].map(([v,l]) => (
               <button key={v} onClick={() => setSortBy(v)}
-                className={`px-3 py-1.5 rounded-lg text-[12.5px] font-medium transition-all ${sortBy===v ? 'bg-navy-600 text-white' : 'text-[var(--text-muted)] hover:text-[var(--text)]'}`}>{l}</button>
+                className={`px-3 py-1.5 rounded-lg text-[12.5px] font-medium transition-all ${sortBy===v ? 'bg-navy-600 text-white' : 'text-(--text-muted) hover:text-(--text)'}`}>{l}</button>
             ))}
           </div>
         </div>
 
-        <div className="bg-[var(--bg)] rounded-2xl border border-[var(--border)] overflow-hidden">
+        <div className="bg-(--bg) rounded-2xl border border-(--border) overflow-hidden">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="bg-[var(--bg-subtle)] text-[12.5px] text-[var(--text-muted)]">
+              <tr className="bg-(--bg-subtle) text-[12.5px] text-(--text-muted)">
                 <th className="font-medium px-6 py-3.5">Crop</th>
                 <th className="font-medium px-6 py-3.5 hidden sm:table-cell">Region</th>
                 <th className="font-medium px-6 py-3.5 hidden md:table-cell">Unit</th>
@@ -92,13 +92,13 @@ export default function BuyerPrices() {
               {filtered.map((item, i) => {
                 const up = item.change > 0, flat = item.change === 0
                 return (
-                  <tr key={item.crop} className={`hover:bg-[var(--bg-subtle)] transition-colors ${i < filtered.length-1 ? 'border-b border-[var(--border)]' : ''}`}>
-                    <td className="px-6 py-4 text-[14.5px] font-medium text-[var(--text)]">{item.crop}</td>
-                    <td className="px-6 py-4 text-[13.5px] text-[var(--text-muted)] hidden sm:table-cell">{item.region}</td>
-                    <td className="px-6 py-4 text-[13.5px] text-[var(--text-muted)] hidden md:table-cell">{item.unit}</td>
-                    <td className="px-6 py-4 font-mono text-[14px] text-[var(--text)]">{fmt(item.price)}</td>
+                  <tr key={item.crop} className={`hover:bg-(--bg-subtle) transition-colors ${i < filtered.length-1 ? 'border-b border-(--border)' : ''}`}>
+                    <td className="px-6 py-4 text-[14.5px] font-medium text-(--text)">{item.crop}</td>
+                    <td className="px-6 py-4 text-[13.5px] text-(--text-muted) hidden sm:table-cell">{item.region}</td>
+                    <td className="px-6 py-4 text-[13.5px] text-(--text-muted) hidden md:table-cell">{item.unit}</td>
+                    <td className="px-6 py-4 font-mono text-[14px] text-(--text)">{fmt(item.price)}</td>
                     <td className="px-6 py-4">
-                      <div className={`flex items-center justify-end gap-1 font-mono text-[13px] font-medium ${flat?'text-[var(--text-muted)]':up?'text-green-600 dark:text-green-400':'text-red-500 dark:text-red-400'}`}>
+                      <div className={`flex items-center justify-end gap-1 font-mono text-[13px] font-medium ${flat?'text-(--text-muted)':up?'text-green-600 dark:text-green-400':'text-red-500 dark:text-red-400'}`}>
                         {flat?<Minus size={13}/>:up?<TrendingUp size={13}/>:<TrendingDown size={13}/>}
                         {flat ? '0.0%' : `${Math.abs(item.change)}%`}
                       </div>
@@ -108,7 +108,7 @@ export default function BuyerPrices() {
               })}
             </tbody>
           </table>
-          {filtered.length === 0 && <p className="text-center py-12 text-[var(--text-muted)]">No crops match your search.</p>}
+          {filtered.length === 0 && <p className="text-center py-12 text-(--text-muted)">No crops match your search.</p>}
         </div>
       </div>
     </BuyerLayout>
