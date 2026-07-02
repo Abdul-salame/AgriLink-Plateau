@@ -19,6 +19,9 @@ import Logistics       from './pages/farmer/Logistics'
 import Reviews         from './pages/farmer/Reviews'
 import Settings        from './pages/farmer/Settings'
 
+import AdminDashboard  from './pages/admin/AdminDashboard'
+import AdminDisputes  from './pages/admin/AdminDisputes'
+
 export default function App() {
   return (
     <AuthProvider>
@@ -45,6 +48,10 @@ export default function App() {
           <Route path="/farmer/reviews"      element={<Reviews />} />
           <Route path="/farmer/settings"     element={<Settings />} />
 
+          {/* Admin */}
+          <Route path="/admin/dashboard"     element={<AdminDashboard />} />
+          <Route path="/admin/disputes"      element={<AdminDisputes />} />
+          
           {/* Buyer — next phase */}
           <Route path="/buyer/*" element={
             <div className="min-h-screen flex items-center justify-center font-display text-2xl text-navy-700 dark:text-navy-200">
