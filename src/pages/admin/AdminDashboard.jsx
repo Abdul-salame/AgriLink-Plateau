@@ -38,42 +38,44 @@ export default function AdminDashboard() {
 
   return (
     <AdminLayout title="Dashboard">
-      <div className="p-6 lg:p-8 max-w-[1280px] mx-auto space-y-7">
+      <div className="px-4 py-5 sm:px-6 sm:py-7 lg:px-8 lg:py-8 max-w-[1280px] mx-auto space-y-5 sm:space-y-6 lg:space-y-7">
 
         {/* Greeting */}
         <div>
-          <h2 className="font-display text-[26px] font-medium text-navy-700 dark:text-navy-100">Good morning, {adminProfile.name.split(' ')[0]} 👋</h2>
+          <h2 className="font-display text-[22px] sm:text-[26px] font-medium text-navy-700 dark:text-navy-100">Good morning, {adminProfile.name.split(' ')[0]} 👋</h2>
           <p className="text-[14px] text-[var(--text-muted)] mt-1">{today} · Platform overview</p>
         </div>
 
         {/* KYC alert banner */}
-        <div className="flex items-center gap-4 p-4 rounded-2xl bg-clay-500/10 border border-clay-500/25">
-          <div className="w-10 h-10 rounded-xl bg-clay-500 flex items-center justify-center text-white shrink-0">
-            <UserCheck size={18} strokeWidth={2} />
+        <div className="flex flex-col gap-3 rounded-2xl border border-clay-500/25 bg-clay-500/10 p-4 sm:flex-row sm:items-center sm:gap-4">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-clay-500 flex items-center justify-center text-white shrink-0">
+              <UserCheck size={18} strokeWidth={2} />
+            </div>
+            <div className="flex-1">
+              <p className="text-[14px] font-medium text-clay-700 dark:text-clay-300">27 KYC submissions pending review — 3 flagged</p>
+              <p className="text-[13px] text-clay-600/70 dark:text-clay-400/70 mt-0.5">Oldest submission is 3 days old. Review needed to keep verification SLA.</p>
+            </div>
           </div>
-          <div className="flex-1">
-            <p className="text-[14px] font-medium text-clay-700 dark:text-clay-300">27 KYC submissions pending review — 3 flagged</p>
-            <p className="text-[13px] text-clay-600/70 dark:text-clay-400/70 mt-0.5">Oldest submission is 3 days old. Review needed to keep verification SLA.</p>
-          </div>
-          <Link to="/admin/kyc" className="shrink-0 inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-clay-500 text-white text-[13.5px] font-medium hover:bg-clay-600 transition-colors">
+          <Link to="/admin/kyc" className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-clay-500 px-4 py-2 text-[13.5px] font-medium text-white transition-colors hover:bg-clay-600 sm:shrink-0">
             Review now <ArrowRight size={14} />
           </Link>
         </div>
 
         {/* Stats */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
           {platformStats.map(s => <StatCard key={s.label} stat={s} />)}
         </div>
 
         {/* Charts */}
-        <div className="grid lg:grid-cols-2 gap-6">
+        <div className="grid gap-6 xl:grid-cols-2">
           {/* User growth */}
-          <div className="bg-[var(--bg)] rounded-2xl border border-[var(--border)] p-6">
-            <div className="flex items-center justify-between mb-6">
+          <div className="rounded-2xl border border-[var(--border)] bg-[var(--bg)] p-4 sm:p-6">
+            <div className="mb-6 flex items-center justify-between gap-3">
               <h3 className="font-medium text-[15px] text-[var(--text)]">User growth</h3>
               <span className="text-[13px] text-[var(--text-muted)]">Last 6 months</span>
             </div>
-            <ResponsiveContainer width="100%" height={200}>
+            <ResponsiveContainer width="100%" height={220}>
               <AreaChart data={userGrowthChart} margin={{ top:4, right:4, left:0, bottom:0 }}>
                 <defs>
                   <linearGradient id="farmerGrad" x1="0" y1="0" x2="0" y2="1">
@@ -97,12 +99,12 @@ export default function AdminDashboard() {
           </div>
 
           {/* Order volume */}
-          <div className="bg-[var(--bg)] rounded-2xl border border-[var(--border)] p-6">
-            <div className="flex items-center justify-between mb-6">
+          <div className="rounded-2xl border border-[var(--border)] bg-[var(--bg)] p-4 sm:p-6">
+            <div className="mb-6 flex items-center justify-between gap-3">
               <h3 className="font-medium text-[15px] text-[var(--text)]">Monthly orders</h3>
               <span className="text-[13px] text-[var(--text-muted)]">Last 6 months</span>
             </div>
-            <ResponsiveContainer width="100%" height={200}>
+            <ResponsiveContainer width="100%" height={220}>
               <BarChart data={orderVolumeChart} margin={{ top:4, right:4, left:0, bottom:0 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
                 <XAxis dataKey="month" tick={{ fontSize:12, fill:'var(--text-muted)' }} axisLine={false} tickLine={false} />
@@ -115,8 +117,8 @@ export default function AdminDashboard() {
         </div>
 
         {/* Recent activity */}
-        <div className="bg-[var(--bg)] rounded-2xl border border-[var(--border)] overflow-hidden">
-          <div className="flex items-center justify-between px-6 py-4 border-b border-[var(--border)]">
+        <div className="overflow-hidden rounded-2xl border border-[var(--border)] bg-[var(--bg)]">
+          <div className="flex flex-col gap-2 border-b border-[var(--border)] px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6">
             <h3 className="font-medium text-[15px] text-[var(--text)]">Recent activity</h3>
             <span className="text-[13px] text-[var(--text-muted)]">Live feed</span>
           </div>
@@ -124,14 +126,14 @@ export default function AdminDashboard() {
             {recentActivity.map(a => {
               const Icon = ACTIVITY_ICONS[a.type] ?? AlertTriangle
               return (
-                <div key={a.id} className="flex items-start gap-4 px-6 py-4 hover:bg-[var(--bg-subtle)] transition-colors">
-                  <div className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 mt-0.5 ${ACTIVITY_STYLE[a.status]}`}>
+                <div key={a.id} className="flex flex-col gap-3 px-4 py-4 hover:bg-[var(--bg-subtle)] transition-colors sm:flex-row sm:items-start sm:gap-4 sm:px-6">
+                  <div className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${ACTIVITY_STYLE[a.status]}`}>
                     <Icon size={14} strokeWidth={2} />
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="text-[14px] text-[var(--text)]">{a.message}</p>
                   </div>
-                  <span className="text-[12px] text-[var(--text-muted)] shrink-0 mt-0.5">{a.time}</span>
+                  <span className="text-[12px] text-[var(--text-muted)] shrink-0">{a.time}</span>
                 </div>
               )
             })}
