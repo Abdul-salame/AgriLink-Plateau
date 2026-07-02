@@ -1,6 +1,6 @@
 export const adminProfile = {
-  name: 'Ibrahim Plateau',
-  avatar: 'IP',
+  name: 'Abdulsalam Abdulwasiu',
+  avatar: 'AA',
   role: 'Super Admin',
   email: 'admin@agrilinkplateau.ng',
 }
