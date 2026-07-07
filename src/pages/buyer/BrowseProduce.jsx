@@ -1,6 +1,6 @@
 
 import { useState } from 'react'
-import { Search, Star, CheckCircle2, Bookmark, BookmarkCheck, X, Sprout } from 'lucide-react'
+import { Search, Star, CheckCircle2, Bookmark, BookmarkCheck, X } from 'lucide-react'
 import BuyerLayout from '../../layouts/BuyerLayout'
 import Button from '../../components/Button'
 import { produceCatalogue } from '../../data/buyerData'
@@ -10,12 +10,48 @@ const LGAS = ['All LGAs','Barkin Ladi','Bassa','Bokkos','Jos East','Jos North','
 
 function fmt(n) { return `₦${n.toLocaleString('en-NG')}` }
 
+function escapeXml(value) {
+  return value.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;')
+}
+
+function buildProduceArtwork(item) {
+  if (item.imageUrl) return item.imageUrl
+
+  const label = item.produce.length > 18 ? `${item.produce.slice(0, 16)}…` : item.produce
+  const palette = item.produce.toLowerCase().includes('tomato') || item.produce.toLowerCase().includes('pepper')
+    ? ['#f97316', '#fde68a']
+    : item.produce.toLowerCase().includes('maize') || item.produce.toLowerCase().includes('corn')
+      ? ['#b45309', '#fde68a']
+      : item.produce.toLowerCase().includes('potato')
+        ? ['#a16207', '#fcd34d']
+        : item.produce.toLowerCase().includes('rice')
+          ? ['#f59e0b', '#d1fae5']
+          : item.produce.toLowerCase().includes('bean') || item.produce.toLowerCase().includes('cowpea')
+            ? ['#15803d', '#bbf7d0']
+            : ['#1d4ed8', '#bfdbfe']
+
+  const [accent, glow] = palette
+  const svg = `
+    <svg xmlns="http://www.w3.org/2000/svg" width="400" height="240" viewBox="0 0 400 240">
+      <rect width="400" height="240" rx="28" fill="#f8fafc"/>
+      <rect x="24" y="24" width="352" height="192" rx="24" fill="${accent}" opacity="0.16"/>
+      <circle cx="318" cy="70" r="58" fill="${glow}" opacity="0.8"/>
+      <path d="M220 180c-18-26-12-60 10-85 20-26 48-35 76-34 24 0 46 10 62 29 10 12 16 27 16 44 0 42-30 76-72 76-31 0-60-18-77-46Z" fill="${accent}" opacity="0.92"/>
+      <path d="M182 154c-25-18-39-48-33-78 5-26 21-46 48-58" stroke="${accent}" stroke-width="10" stroke-linecap="round" fill="none"/>
+      <path d="M158 92c-10 8-20 19-24 35-6 22 6 46 28 68" stroke="${accent}" stroke-width="10" stroke-linecap="round" fill="none"/>
+      <rect x="56" y="170" width="140" height="24" rx="12" fill="white" opacity="0.72"/>
+      <text x="68" y="186" fill="#0f172a" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="700">${escapeXml(label)}</text>
+    </svg>`
+
+  return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`
+}
+
 function ProduceCard({ item, saved, onSave, onOrder }) {
   return (
     <div className="bg-(--bg) rounded-2xl border border-(--border) flex flex-col overflow-hidden hover:border-(--border-mid) hover:shadow-sm transition-all">
     
-      <div className="h-36 bg-navy-50 dark:bg-navy-800 flex items-center justify-center relative">
-        <Sprout size={48} className="text-navy-600 dark:text-gold-400 opacity-80" />
+      <div className="h-36 bg-navy-50 dark:bg-navy-800 relative overflow-hidden">
+        <img src={buildProduceArtwork(item)} alt={item.produce} className="h-full w-full object-cover" />
         <button onClick={() => onSave(item.id)}
           className="absolute top-3 right-3 w-8 h-8 rounded-full bg-(--bg)/90 backdrop-blur flex items-center justify-center text-(--text-muted) hover:text-navy-600 dark:hover:text-gold-400 transition-colors shadow-sm">
           {saved ? <BookmarkCheck size={16} className="text-navy-600 dark:text-gold-400" /> : <Bookmark size={16} />}
