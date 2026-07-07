@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Plus, Eye, Tag, Calendar, Package, Edit2, Trash2, MoreHorizontal, Search, Filter } from 'lucide-react'
+import { Plus, Eye, Tag, Calendar, Package, Edit2, Trash2, MoreHorizontal, Search, Filter, Sprout } from 'lucide-react'
 import FarmerLayout from '../../layouts/FarmerLayout'
 import Button from '../../components/Button'
 import { allListings } from '../../data/farmerData'
@@ -19,7 +19,9 @@ function ListingCard({ listing, onDelete }) {
     <div className="bg-(--bg) rounded-2xl border border-(--border) p-5 flex flex-col gap-4 hover:border-(--border-mid) transition-colors">
       <div className="flex items-start justify-between gap-3">
         <div className="flex items-center gap-3">
-          <div className="w-11 h-11 rounded-xl bg-navy-50 dark:bg-navy-800 flex items-center justify-center text-[22px] shrink-0">🌱</div>
+          <div className="w-11 h-11 rounded-xl bg-navy-50 dark:bg-navy-800 flex items-center justify-center shrink-0">
+            <Sprout size={20} className="text-navy-600 dark:text-gold-400" />
+          </div>
           <div>
             <p className="text-[15px] font-medium text-(--text)">{listing.produce}</p>
             <p className="text-[12.5px] text-(--text-muted)">{listing.category} · {listing.id}</p>

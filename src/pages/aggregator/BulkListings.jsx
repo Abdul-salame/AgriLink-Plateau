@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Plus, Eye, Tag, Users, Calendar, CheckCircle2 } from 'lucide-react'
+import { Plus, Eye, Tag, Users, Calendar, CheckCircle2, Sprout } from 'lucide-react'
 import AggregatorLayout from '../../layouts/AggregatorLayout'
 import Button from '../../components/Button'
 import { bulkListings } from '../../data/aggregatorData'
@@ -41,7 +41,9 @@ export default function BulkListings() {
             <div key={l.id} className="bg-[var(--bg)] rounded-2xl border border-[var(--border)] p-5 flex flex-col gap-4 hover:border-[var(--border-mid)] transition-colors">
               <div className="flex items-start justify-between gap-3">
                 <div className="flex items-center gap-3">
-                  <div className="w-11 h-11 rounded-xl bg-navy-50 dark:bg-navy-800 flex items-center justify-center text-[22px] shrink-0">🌱</div>
+                  <div className="w-11 h-11 rounded-xl bg-navy-50 dark:bg-navy-800 flex items-center justify-center shrink-0">
+                    <Sprout size={20} className="text-navy-600 dark:text-gold-400" />
+                  </div>
                   <div>
                     <p className="text-[15px] font-medium text-[var(--text)]">{l.produce}</p>
                     <p className="text-[12px] font-mono text-[var(--text-muted)]">{l.id}</p>

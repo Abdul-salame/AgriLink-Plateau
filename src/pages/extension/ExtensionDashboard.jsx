@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { TrendingUp, ArrowRight, ShieldCheck, Plus, AlertTriangle, Users, Newspaper, CheckCircle2, Clock } from 'lucide-react'
+import { TrendingUp, ArrowRight, ShieldCheck, Plus, AlertTriangle, Users, Newspaper, CheckCircle2, Clock, Hand } from 'lucide-react'
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
 import ExtensionLayout from '../../layouts/ExtensionLayout'
 import Button from '../../components/Button'
@@ -36,7 +36,7 @@ export default function ExtensionDashboard() {
         {/* Header */}
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
-            <h2 className="font-display text-[26px] font-medium text-navy-700 dark:text-navy-100">Good morning, {extensionProfile.firstName} 👋</h2>
+            <h2 className="font-display text-[26px] font-medium text-navy-700 dark:text-navy-100 flex items-center gap-2">Good morning, {extensionProfile.firstName}<Hand size={18} className="text-gold-500" /></h2>
             <p className="text-[14px] text-[var(--text-muted)] mt-1">{today} · {extensionProfile.affiliation}</p>
           </div>
           <Button as={Link} to="/extension/advisories" variant="accent" size="md"><Plus size={16}/>Post advisory</Button>

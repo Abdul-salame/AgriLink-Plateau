@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { TrendingUp, ArrowRight, CheckCircle2, Truck, Clock, AlertTriangle, MapPin, Phone, Star } from 'lucide-react'
+import { TrendingUp, ArrowRight, CheckCircle2, Truck, Clock, AlertTriangle, MapPin, Phone, Star, Hand } from 'lucide-react'
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
 import LogisticsLayout from '../../layouts/LogisticsLayout'
 import Button from '../../components/Button'
@@ -35,7 +35,7 @@ export default function LogisticsDashboard() {
         {/* Header */}
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
-            <h2 className="font-display text-[26px] font-medium text-navy-700 dark:text-navy-100">Good morning, {logisticsProfile.contactName.split(' ')[0]} 👋</h2>
+            <h2 className="font-display text-[26px] font-medium text-navy-700 dark:text-navy-100 flex items-center gap-2">Good morning, {logisticsProfile.contactName.split(' ')[0]}<Hand size={18} className="text-gold-500" /></h2>
             <p className="text-[14px] text-[var(--text-muted)] mt-1">{today} · {logisticsProfile.name}</p>
           </div>
           <Button as={Link} to="/logistics/requests" variant="accent" size="md"><Truck size={16}/>View requests</Button>

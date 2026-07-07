@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { TrendingUp, ArrowRight, ShoppingBasket, Package, Bookmark, Star, CheckCircle2, Circle, Truck } from 'lucide-react'
+import { TrendingUp, ArrowRight, ShoppingBasket, Package, Bookmark, Star, CheckCircle2, Circle, Truck, Sprout } from 'lucide-react'
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
 import BuyerLayout from '../../layouts/BuyerLayout'
 import Button from '../../components/Button'
@@ -39,7 +39,9 @@ function ProduceCard({ item }) {
   return (
     <div className="bg-(--bg) rounded-2xl border border-(--border) p-4 flex flex-col gap-3 hover:border-(--border-mid) transition-colors">
       <div className="flex items-start justify-between gap-2">
-        <div className="w-10 h-10 rounded-xl bg-navy-50 dark:bg-navy-800 flex items-center justify-center text-[20px] shrink-0">🌱</div>
+        <div className="w-10 h-10 rounded-xl bg-navy-50 dark:bg-navy-800 flex items-center justify-center shrink-0">
+          <Sprout size={18} className="text-navy-600 dark:text-gold-400" />
+        </div>
         {item.verified && (
           <span className="text-[11px] font-medium bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-400 px-2 py-0.5 rounded-full border border-green-200 dark:border-green-800">✓ Verified</span>
         )}
