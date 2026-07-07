@@ -42,6 +42,15 @@ import AdminPrices      from './pages/admin/AdminPrices'
 import AdminDisputes    from './pages/admin/AdminDisputes'
 import AdminSettings    from './pages/admin/AdminSettings'
 
+// Aggregator
+import AggregatorDashboard   from './pages/aggregator/AggregatorDashboard'
+import FarmerNetwork         from './pages/aggregator/FarmerNetwork'
+import BulkListings          from './pages/aggregator/BulkListings'
+import AggregatorOrders      from './pages/aggregator/AggregatorOrders'
+import AggregatorPrices      from './pages/aggregator/AggregatorPrices'
+import AggregatorPayments    from './pages/aggregator/AggregatorPayments'
+import AggregatorSettings    from './pages/aggregator/AggregatorSettings'
+
 // Logistics
 import LogisticsDashboard    from './pages/logistics/LogisticsDashboard'
 import DeliveryRequests      from './pages/logistics/DeliveryRequests'
@@ -117,6 +126,16 @@ export default function App() {
                               <Route path="/extension/farmers"          element={<SupportedFarmers />}     />
                               <Route path="/extension/advisories"       element={<Advisories />}           />
                               <Route path="/extension/settings"         element={<ExtensionSettings />}    />
+
+                               {/* Aggregator */}
+                                        <Route path="/aggregator/dashboard"       element={<AggregatorDashboard />}  />
+                                        <Route path="/aggregator/farmers"         element={<FarmerNetwork />}        />
+                                        <Route path="/aggregator/listings"        element={<BulkListings />}         />
+                                        <Route path="/aggregator/orders"          element={<AggregatorOrders />}     />
+                                        <Route path="/aggregator/prices"          element={<AggregatorPrices />}     />
+                                        <Route path="/aggregator/payments"        element={<AggregatorPayments />}   />
+                                        <Route path="/aggregator/settings"        element={<AggregatorSettings />}   />
+                              
                     
 
           {/* Fallback */}
