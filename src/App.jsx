@@ -42,6 +42,21 @@ import AdminPrices      from './pages/admin/AdminPrices'
 import AdminDisputes    from './pages/admin/AdminDisputes'
 import AdminSettings    from './pages/admin/AdminSettings'
 
+// Logistics
+import LogisticsDashboard    from './pages/logistics/LogisticsDashboard'
+import DeliveryRequests      from './pages/logistics/DeliveryRequests'
+import MyDeliveries          from './pages/logistics/MyDeliveries'
+import LogisticsEarnings     from './pages/logistics/LogisticsEarnings'
+import MyVehicle             from './pages/logistics/MyVehicle'
+import LogisticsSettings     from './pages/logistics/LogisticsSettings'
+
+// Extension
+import ExtensionDashboard    from './pages/extension/ExtensionDashboard'
+import FarmVerifications     from './pages/extension/FarmVerifications'
+import SupportedFarmers      from './pages/extension/SupportedFarmers'
+import Advisories            from './pages/extension/Advisories'
+import ExtensionSettings     from './pages/extension/ExtensionSettings'
+
 export default function App() {
   return (
     <AuthProvider>
@@ -87,6 +102,22 @@ export default function App() {
           <Route path="/admin/prices"         element={<AdminPrices />}     />
           <Route path="/admin/disputes"       element={<AdminDisputes />}   />
           <Route path="/admin/settings"       element={<AdminSettings />}   />
+
+           {/* Logistics */}
+                    <Route path="/logistics/dashboard"        element={<LogisticsDashboard />}   />
+                    <Route path="/logistics/requests"         element={<DeliveryRequests />}     />
+                    <Route path="/logistics/deliveries"       element={<MyDeliveries />}         />
+                    <Route path="/logistics/earnings"         element={<LogisticsEarnings />}    />
+                    <Route path="/logistics/vehicle"          element={<MyVehicle />}            />
+                    <Route path="/logistics/settings"         element={<LogisticsSettings />}    />
+
+                     {/* Extension */}
+                              <Route path="/extension/dashboard"        element={<ExtensionDashboard />}   />
+                              <Route path="/extension/verifications"    element={<FarmVerifications />}    />
+                              <Route path="/extension/farmers"          element={<SupportedFarmers />}     />
+                              <Route path="/extension/advisories"       element={<Advisories />}           />
+                              <Route path="/extension/settings"         element={<ExtensionSettings />}    />
+                    
 
           {/* Fallback */}
           <Route path="*" element={<Navigate to="/" replace />} />
