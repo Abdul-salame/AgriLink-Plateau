@@ -43,14 +43,28 @@ export default function Register() {
     return (e) => setFields(f => ({ ...f, [key]: e.target.value }))
   }
 
-  function handleSubmit() {
+  async function handleSubmit() {
     const errs = validate(fields)
     if (Object.keys(errs).length) { setErrors(errs); return }
     setLoading(true)
-    setTimeout(() => {
-      register({ ...fields, role: authState.role })
+    setErrors({})
+
+    try {
+      await register({
+        firstName: fields.firstName,
+        lastName: fields.lastName,
+        email: fields.email,
+        phone: fields.phone,
+        password: fields.password,
+        role: authState.role,
+        lga: fields.lga,
+      })
       navigate('/auth/verify-otp')
-    }, 800)
+    } catch (err) {
+      setErrors({ form: err.response?.data?.message || 'Unable to create account. Please try again.' })
+    } finally {
+      setLoading(false)
+    }
   }
 
   const roleLabels = {
@@ -113,6 +127,10 @@ export default function Register() {
           and{' '}
           <a href="#" className="text-navy-600 dark:text-gold-400 hover:underline">Privacy Policy</a>.
         </p>
+
+        {errors.form && (
+          <p className="text-[13px] text-red-500">{errors.form}</p>
+        )}
 
         <Button variant="primary" size="lg" className="w-full mt-1" onClick={handleSubmit} disabled={loading}>
           {loading ? 'Creating account…' : 'Continue'}

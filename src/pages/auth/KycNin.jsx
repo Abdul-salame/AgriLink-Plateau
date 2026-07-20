@@ -5,6 +5,7 @@ import AuthLayout from '../../layouts/AuthLayout'
 import { FormInput } from '../../components/FormInput'
 import Button from '../../components/Button'
 import { useAuth } from '../../lib/AuthContext'
+import api from '../../lib/api'
 
 function validateNin(nin) {
   if (!nin) return 'NIN is required'
@@ -29,7 +30,7 @@ export default function KycNin() {
   const [errors, setErrors] = useState({})
   const [loading, setLoading] = useState(false)
 
-  function handleSubmit() {
+  async function handleSubmit() {
     const errs = {}
     const ninErr = validateNin(nin)
     const dobErr = validateDob(dob)
@@ -38,11 +39,17 @@ export default function KycNin() {
     if (Object.keys(errs).length) { setErrors(errs); return }
 
     setLoading(true)
-    // Simulate NIN format check (real check = VSP API call)
-    setTimeout(() => {
+    setErrors({})
+
+    try {
+      await api.post('/kyc/submit-nin', { nin, dateOfBirth: dob })
       submitKyc({ nin, dateOfBirth: dob })
       navigate('/auth/kyc-upload')
-    }, 1200)
+    } catch (err) {
+      setErrors({ form: err.response?.data?.message || 'Unable to submit NIN right now.' })
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -111,6 +118,8 @@ export default function KycNin() {
             or enrol online at nimc.gov.ng. NIN enrolment is free.
           </p>
         </div>
+
+        {errors.form && <p className="text-[13px] text-red-500">{errors.form}</p>}
 
         <Button
           variant="primary" size="lg" className="w-full mt-1"

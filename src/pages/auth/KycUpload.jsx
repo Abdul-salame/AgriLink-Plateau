@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { Camera, CheckCircle2, X, FileImage } from 'lucide-react'
 import AuthLayout from '../../layouts/AuthLayout'
 import Button from '../../components/Button'
+import api from '../../lib/api'
 
 function UploadZone({ label, hint, icon: Icon, file, onFile, onClear, accept }) {
   const ref = useRef()
@@ -58,14 +59,29 @@ export default function KycUpload() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
 
-  function handleSubmit() {
+  async function handleSubmit() {
     if (!idDoc || !selfie) {
       setError('Please upload both your ID document and selfie to continue.')
       return
     }
     setError('')
     setLoading(true)
-    setTimeout(() => navigate('/auth/kyc-pending'), 1200)
+
+    try {
+      const formData = new FormData()
+      formData.append('ninCard', idDoc)
+      formData.append('selfie', selfie)
+
+      await api.post('/kyc/upload-docs', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      })
+
+      navigate('/auth/kyc-pending')
+    } catch (err) {
+      setError(err.response?.data?.message || 'Unable to upload your documents right now.')
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (

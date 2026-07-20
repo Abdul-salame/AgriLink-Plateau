@@ -1,9 +1,9 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Plus, Eye, Tag, Calendar, Package, Edit2, Trash2, MoreHorizontal, Search, Filter, Sprout } from 'lucide-react'
+import { Plus, Eye, Tag, Calendar, Package, Edit2, Trash2, MoreHorizontal, Search, Sprout } from 'lucide-react'
 import FarmerLayout from '../../layouts/FarmerLayout'
 import Button from '../../components/Button'
-import { allListings } from '../../data/farmerData'
+import api from '../../lib/api'
 
 function fmt(n) { return `₦${n.toLocaleString('en-NG')}` }
 
@@ -24,7 +24,7 @@ function ListingCard({ listing, onDelete }) {
           </div>
           <div>
             <p className="text-[15px] font-medium text-(--text)">{listing.produce}</p>
-            <p className="text-[12.5px] text-(--text-muted)">{listing.category} · {listing.id}</p>
+            <p className="text-[12.5px] text-(--text-muted)">{listing.category} · {listing._id.slice(-6)}</p>
           </div>
         </div>
         <div className="flex items-center gap-2">
@@ -41,7 +41,7 @@ function ListingCard({ listing, onDelete }) {
                 <button className="w-full flex items-center gap-2.5 px-4 py-2.5 text-[13.5px] text-(--text) hover:bg-(--bg-subtle) transition-colors">
                   <Edit2 size={13}/> Edit listing
                 </button>
-                <button onClick={() => { onDelete(listing.id); setMenuOpen(false) }}
+                <button onClick={() => { onDelete(listing._id); setMenuOpen(false) }}
                   className="w-full flex items-center gap-2.5 px-4 py-2.5 text-[13.5px] text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors">
                   <Trash2 size={13}/> Delete
                 </button>
@@ -52,15 +52,15 @@ function ListingCard({ listing, onDelete }) {
       </div>
 
       <div className="grid grid-cols-2 gap-y-2 gap-x-4 text-[13px]">
-        <span className="flex items-center gap-1.5 text-(--text-muted)"><Package size={13}/>{listing.qty}</span>
+        <span className="flex items-center gap-1.5 text-(--text-muted)"><Package size={13}/>{listing.quantity}</span>
         <span className="flex items-center gap-1.5 text-(--text-muted)"><Tag size={13}/>{fmt(listing.price)}/{listing.unit}</span>
-        <span className="flex items-center gap-1.5 text-(--text-muted)"><Calendar size={13}/>{listing.harvestDate}</span>
-        <span className="flex items-center gap-1.5 text-(--text-muted)"><Eye size={13}/>{listing.views} views</span>
+        <span className="flex items-center gap-1.5 text-(--text-muted)"><Calendar size={13}/>{new Date(listing.harvestDate).toLocaleDateString()}</span>
+        <span className="flex items-center gap-1.5 text-(--text-muted)"><Eye size={13}/>{listing.views || 0} views</span>
       </div>
 
-      {listing.offers > 0 && (
+      {(listing.offerCount || 0) > 0 && (
         <div className="flex items-center justify-between p-3 rounded-xl bg-gold-50 dark:bg-gold-900/20 border border-gold-200 dark:border-gold-800">
-          <span className="text-[13px] text-gold-800 dark:text-gold-300 font-medium">{listing.offers} buyer offer{listing.offers > 1 ? 's' : ''} waiting</span>
+          <span className="text-[13px] text-gold-800 dark:text-gold-300 font-medium">{listing.offerCount} buyer offer{listing.offerCount > 1 ? 's' : ''} waiting</span>
           <button className="text-[12.5px] text-navy-600 dark:text-gold-400 font-medium hover:underline">View offers</button>
         </div>
       )}
@@ -69,12 +69,38 @@ function ListingCard({ listing, onDelete }) {
 }
 
 export default function MyListings() {
-  const [listings, setListings] = useState(allListings)
+  const [listings, setListings] = useState([])
   const [filter, setFilter]     = useState('all')
   const [search, setSearch]     = useState('')
+  const [loading, setLoading]   = useState(true)
+  const [error, setError]       = useState('')
 
-  function handleDelete(id) {
-    if (confirm('Delete this listing?')) setListings(l => l.filter(x => x.id !== id))
+  useEffect(() => {
+    let mounted = true
+    async function loadListings() {
+      setLoading(true)
+      setError('')
+      try {
+        const { data } = await api.get('/listings/my')
+        if (mounted) setListings(data.data || [])
+      } catch (err) {
+        if (mounted) setError(err.response?.data?.message || 'Unable to load your listings.')
+      } finally {
+        if (mounted) setLoading(false)
+      }
+    }
+    loadListings()
+    return () => { mounted = false }
+  }, [])
+
+  async function handleDelete(id) {
+    if (!confirm('Delete this listing?')) return
+    try {
+      await api.delete(`/listings/${id}`)
+      setListings(l => l.filter(x => x._id !== id))
+    } catch (err) {
+      setError(err.response?.data?.message || 'Unable to delete listing.')
+    }
   }
 
   const filtered = listings.filter(l => {
@@ -115,14 +141,18 @@ export default function MyListings() {
           </div>
         </div>
 
-        {filtered.length === 0 ? (
+        {error && <p className="text-[13px] text-red-500 mb-4">{error}</p>}
+
+        {loading ? (
+          <div className="text-center py-20 text-(--text-muted)">Loading your listings…</div>
+        ) : filtered.length === 0 ? (
           <div className="text-center py-20">
             <p className="text-[15px] text-(--text-muted)">No listings found.</p>
             <Button as={Link} to="/farmer/listings/new" variant="primary" size="md" className="mt-4">Add your first listing</Button>
           </div>
         ) : (
           <div className="grid sm:grid-cols-2 xl:grid-cols-3 gap-4">
-            {filtered.map(l => <ListingCard key={l.id} listing={l} onDelete={handleDelete}/>)}
+            {filtered.map(l => <ListingCard key={l._id} listing={l} onDelete={handleDelete}/>)}
           </div>
         )}
       </div>

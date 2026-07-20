@@ -4,6 +4,7 @@ import { Upload, X, ChevronLeft, CheckCircle2 } from 'lucide-react'
 import FarmerLayout from '../../layouts/FarmerLayout'
 import { FormInput, FormSelect } from '../../components/FormInput'
 import Button from '../../components/Button'
+import api from '../../lib/api'
 
 const CATEGORIES = ['Tubers','Vegetables','Grains','Fruits','Legumes','Spices']
 const UNITS      = ['50kg bag','100kg bag','basket','net','crate','tonne','kg','bunch']
@@ -66,11 +67,37 @@ export default function NewListing() {
 
   function set(key) { return e => { setFields(f=>({...f,[key]:e.target.value})); setErrors(er=>({...er,[key]:undefined})) } }
 
-  function handleSubmit() {
+  async function handleSubmit() {
     const errs = validate(fields)
     if (Object.keys(errs).length) { setErrors(errs); return }
+
     setLoading(true)
-    setTimeout(() => { setLoading(false); setSuccess(true); setTimeout(() => navigate('/farmer/listings'), 1800) }, 1200)
+    setErrors({})
+
+    try {
+      const formData = new FormData()
+      formData.append('produce', fields.produce)
+      formData.append('category', fields.category)
+      formData.append('description', fields.description)
+      formData.append('quantity', fields.quantity)
+      formData.append('unit', fields.unit)
+      formData.append('price', fields.price)
+      formData.append('minOrder', fields.minOrder)
+      formData.append('lga', fields.lga)
+      formData.append('harvestDate', fields.harvestDate)
+      images.forEach((img) => formData.append('photos', img.file))
+
+      await api.post('/listings', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      })
+
+      setSuccess(true)
+      setTimeout(() => navigate('/farmer/listings'), 1800)
+    } catch (err) {
+      setErrors({ form: err.response?.data?.message || 'Unable to publish listing right now.' })
+    } finally {
+      setLoading(false)
+    }
   }
 
   if (success) return (
@@ -148,6 +175,8 @@ export default function NewListing() {
               <span className="font-mono font-medium text-navy-700 dark:text-gold-400">₦{Number(fields.price||0).toLocaleString('en-NG')} / {fields.unit}</span>
             </div>
           )}
+
+          {errors.form && <p className="text-[13px] text-red-500">{errors.form}</p>}
 
           <div className="flex flex-wrap items-center gap-3 pt-2">
             <Button variant="primary" size="lg" onClick={handleSubmit} disabled={loading} className="flex-1 sm:flex-none">

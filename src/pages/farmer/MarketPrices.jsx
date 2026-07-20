@@ -1,31 +1,44 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { TrendingUp, TrendingDown, Minus, Search, RefreshCw } from 'lucide-react'
 import FarmerLayout from '../../layouts/FarmerLayout'
-import { marketPrices } from '../../data/marketData'
+import api from '../../lib/api'
 
 function fmt(n) { return `₦${n.toLocaleString('en-NG')}` }
-
-const ALL_PRICES = [
-  ...marketPrices,
-  { crop: 'Onion',        unit: '100kg bag', price: 58000, change: 5.0,  region: 'Pankshin'   },
-  { crop: 'Fonio',        unit: '100kg bag', price: 64000, change: 3.6,  region: 'Mangu'      },
-  { crop: 'Groundnut',    unit: '100kg bag', price: 72000, change: 1.2,  region: 'Shendam'    },
-  { crop: 'Soybean',      unit: '100kg bag', price: 88000, change: -1.5, region: 'Wase'       },
-  { crop: 'Sweet potato', unit: '50kg bag',  price: 18000, change: 0.0,  region: 'Riyom'      },
-  { crop: 'Yam',          unit: 'tuber',     price: 1800,  change: 2.8,  region: 'Langtang'   },
-  { crop: 'Maize',        unit: '100kg bag', price: 31000, change: 1.5,  region: 'Bokkos'     },
-  { crop: 'Pepper (dry)', unit: 'kg',        price: 4200,  change: -3.1, region: 'Barkin Ladi'},
-]
-
-const REGIONS = ['All regions', ...new Set(ALL_PRICES.map(p => p.region))]
 
 export default function MarketPrices() {
   const [search, setSearch]     = useState('')
   const [region, setRegion]     = useState('All regions')
   const [sortBy, setSortBy]     = useState('name') // name | price | change
-  const [lastUpdated]           = useState('Today, 8:00 AM')
+  const [prices, setPrices]     = useState([])
+  const [loading, setLoading]   = useState(true)
+  const [error, setError]       = useState('')
+  const [lastUpdated, setLastUpdated] = useState('Loading…')
 
-  const filtered = ALL_PRICES
+  useEffect(() => {
+    let mounted = true
+    async function loadPrices() {
+      setLoading(true)
+      setError('')
+      try {
+        const { data } = await api.get('/prices')
+        if (mounted) {
+          const items = data.data?.prices || []
+          setPrices(items)
+          setLastUpdated(new Date().toLocaleString())
+        }
+      } catch (err) {
+        if (mounted) setError(err.response?.data?.message || 'Unable to load market prices.')
+      } finally {
+        if (mounted) setLoading(false)
+      }
+    }
+    loadPrices()
+    return () => { mounted = false }
+  }, [])
+
+  const REGIONS = ['All regions', ...new Set(prices.map(p => p.region))]
+
+  const filtered = prices
     .filter(p => {
       const matchSearch = p.crop.toLowerCase().includes(search.toLowerCase())
       const matchRegion = region === 'All regions' || p.region === region
@@ -52,9 +65,9 @@ export default function MarketPrices() {
         {/* Summary cards */}
         <div className="grid grid-cols-3 gap-4 mb-7">
           {[
-            { label: 'Crops tracked', value: ALL_PRICES.length },
-            { label: 'Rising prices',  value: ALL_PRICES.filter(p=>p.change>0).length, color: 'text-green-600 dark:text-green-400' },
-            { label: 'Falling prices', value: ALL_PRICES.filter(p=>p.change<0).length, color: 'text-red-500 dark:text-red-400'   },
+            { label: 'Crops tracked', value: prices.length },
+            { label: 'Rising prices',  value: prices.filter(p=>p.change>0).length, color: 'text-green-600 dark:text-green-400' },
+            { label: 'Falling prices', value: prices.filter(p=>p.change<0).length, color: 'text-red-500 dark:text-red-400'   },
           ].map(c => (
             <div key={c.label} className="bg-(--bg) rounded-2xl border border-(--border) p-4">
               <p className={`font-display text-[28px] font-medium leading-none ${c.color || 'text-navy-700 dark:text-navy-100'}`}>{c.value}</p>
@@ -84,6 +97,8 @@ export default function MarketPrices() {
           </div>
         </div>
 
+        {error && <p className="text-[13px] text-red-500 mb-4">{error}</p>}
+
         {/* Price table */}
         <div className="bg-(--bg) rounded-2xl border border-(--border) overflow-hidden">
           <table className="w-full text-left border-collapse">
@@ -97,7 +112,9 @@ export default function MarketPrices() {
               </tr>
             </thead>
             <tbody>
-              {filtered.map((item, i) => {
+              {loading ? (
+                <tr><td colSpan="5" className="px-6 py-12 text-center text-(--text-muted)">Loading market prices…</td></tr>
+              ) : filtered.map((item, i) => {
                 const up   = item.change > 0
                 const flat = item.change === 0
                 return (

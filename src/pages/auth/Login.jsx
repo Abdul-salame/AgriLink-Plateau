@@ -38,7 +38,7 @@ export default function Login() {
   // Pick a random quote on mount
   const [quote] = useState(() => QUOTES[Math.floor(Math.random() * QUOTES.length)])
 
-  function handleSubmit() {
+  async function handleSubmit() {
     const errs = {}
     if (!email.trim()) errs.email = 'Email is required'
     else if (!/\S+@\S+\.\S+/.test(email)) errs.email = 'Enter a valid email'
@@ -46,10 +46,17 @@ export default function Login() {
     if (Object.keys(errs).length) { setErrors(errs); return }
 
     setLoading(true)
-    setTimeout(() => {
-      login({ user: { email }, role: 'farmer', kycStatus: 'approved', isLoggedIn: true })
-      navigate('/farmer/dashboard')
-    }, 900)
+    setErrors({})
+
+    try {
+      const response = await login({ email, password })
+      const role = response?.data?.user?.role
+      navigate(role ? `/${role}/dashboard` : '/farmer/dashboard')
+    } catch (err) {
+      setErrors({ form: err.response?.data?.message || 'Unable to log in. Please try again.' })
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -173,6 +180,10 @@ export default function Login() {
                   Forgot password?
                 </a>
               </div>
+
+              {errors.form && (
+                <p className="text-[13px] text-red-500">{errors.form}</p>
+              )}
 
               <Button variant="primary" size="lg" className="w-full"
                 onClick={handleSubmit} disabled={loading}>

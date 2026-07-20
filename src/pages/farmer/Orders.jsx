@@ -1,7 +1,7 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Search, Truck, CheckCircle2, Circle, Package, Phone, ChevronDown, ChevronUp } from 'lucide-react'
 import FarmerLayout from '../../layouts/FarmerLayout'
-import { allOrders } from '../../data/farmerData'
+import api from '../../lib/api'
 
 function fmt(n) { return `₦${n.toLocaleString('en-NG')}` }
 
@@ -32,15 +32,15 @@ function OrderCard({ order, onStatusChange }) {
       <div className="flex items-start justify-between gap-4 p-5 cursor-pointer" onClick={() => setExpanded(v=>!v)}>
         <div className="flex-1 min-w-0">
           <div className="flex flex-wrap items-center gap-2 mb-1">
-            <span className="font-mono text-[12.5px] text-(--text-muted)">{order.id}</span>
+            <span className="font-mono text-[12.5px] text-(--text-muted)">{order._id}</span>
             <StatusBadge status={order.status}/>
           </div>
-          <p className="text-[15px] font-medium text-(--text)">{order.buyer}</p>
-          <p className="text-[13px] text-(--text-muted) mt-0.5">{order.produce} · {order.qty} · {order.buyerLga}</p>
+          <p className="text-[15px] font-medium text-(--text)">{order.buyer?.firstName ? `${order.buyer.firstName} ${order.buyer.lastName}` : 'Buyer'}</p>
+          <p className="text-[13px] text-(--text-muted) mt-0.5">{order.produce} · {order.quantity} · {order.deliveryLga || order.buyer?.lga}</p>
         </div>
         <div className="flex flex-col items-end gap-1.5 shrink-0">
-          <span className="font-mono font-medium text-[15px] text-(--text)">{fmt(order.amount)}</span>
-          <span className="text-[12px] text-(--text-muted)">{order.date}</span>
+          <span className="font-mono font-medium text-[15px] text-(--text)">{fmt(order.total)}</span>
+          <span className="text-[12px] text-(--text-muted)">{new Date(order.createdAt).toLocaleDateString()}</span>
         </div>
         <div className="text-(--text-muted) shrink-0 mt-1">
           {expanded ? <ChevronUp size={16}/> : <ChevronDown size={16}/>}
@@ -52,12 +52,12 @@ function OrderCard({ order, onStatusChange }) {
           <div className="grid sm:grid-cols-2 gap-4 text-[13.5px]">
             <div className="flex flex-col gap-1">
               <span className="text-(--text-muted)">Delivery date</span>
-              <span className="font-medium text-(--text)">{order.deliveryDate}</span>
+              <span className="font-medium text-(--text)">{order.deliveryDate ? new Date(order.deliveryDate).toLocaleDateString() : 'To be agreed'}</span>
             </div>
             <div className="flex flex-col gap-1">
               <span className="text-(--text-muted)">Buyer contact</span>
               <a href={`tel:${order.phone}`} className="font-medium text-navy-600 dark:text-gold-400 flex items-center gap-1.5 hover:underline">
-                <Phone size={13}/>{order.phone}
+                <Phone size={13}/>{order.buyer?.phone || '—'}
               </a>
             </div>
           </div>
@@ -92,7 +92,7 @@ function OrderCard({ order, onStatusChange }) {
           </div>
 
           {nextStatus && order.status !== 'delivered' && (
-            <button onClick={() => onStatusChange(order.id, nextStatus)}
+            <button onClick={() => onStatusChange(order._id, nextStatus)}
               className="self-start inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-navy-600 text-white text-[13.5px] font-medium hover:bg-navy-700 transition-colors">
               <Package size={14}/>
               Mark as {STATUS_META[nextStatus].label}
@@ -105,24 +105,50 @@ function OrderCard({ order, onStatusChange }) {
 }
 
 export default function Orders() {
-  const [orders, setOrders] = useState(allOrders)
+  const [orders, setOrders] = useState([])
   const [filter, setFilter] = useState('all')
   const [search, setSearch] = useState('')
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState('')
 
-  function handleStatusChange(id, newStatus) {
-    setOrders(os => os.map(o => o.id === id ? { ...o, status: newStatus } : o))
+  useEffect(() => {
+    let mounted = true
+    async function loadOrders() {
+      setLoading(true)
+      setError('')
+      try {
+        const { data } = await api.get('/orders')
+        if (mounted) setOrders(data.data || [])
+      } catch (err) {
+        if (mounted) setError(err.response?.data?.message || 'Unable to load orders.')
+      } finally {
+        if (mounted) setLoading(false)
+      }
+    }
+    loadOrders()
+    return () => { mounted = false }
+  }, [])
+
+  async function handleStatusChange(id, newStatus) {
+    try {
+      await api.patch(`/orders/${id}/status`, { status: newStatus })
+      setOrders(os => os.map(o => o._id === id ? { ...o, status: newStatus } : o))
+    } catch (err) {
+      setError(err.response?.data?.message || 'Unable to update order status.')
+    }
   }
 
   const counts = { all: orders.length, pending: 0, confirmed: 0, in_transit: 0, delivered: 0 }
   orders.forEach(o => { counts[o.status] = (counts[o.status] || 0) + 1 })
 
   const filtered = orders.filter(o => {
+    const buyerName = `${o.buyer?.firstName || ''} ${o.buyer?.lastName || ''}`.trim()
     const matchFilter = filter === 'all' || o.status === filter
-    const matchSearch = o.buyer.toLowerCase().includes(search.toLowerCase()) || o.produce.toLowerCase().includes(search.toLowerCase())
+    const matchSearch = buyerName.toLowerCase().includes(search.toLowerCase()) || o.produce.toLowerCase().includes(search.toLowerCase())
     return matchFilter && matchSearch
   })
 
-  const totalValue = orders.reduce((s, o) => s + o.amount, 0)
+  const totalValue = orders.reduce((s, o) => s + (Number(o.total) || 0), 0)
 
   return (
     <FarmerLayout title="Orders">
@@ -162,10 +188,12 @@ export default function Orders() {
           </div>
         </div>
 
+        {error && <p className="text-[13px] text-red-500 mb-4">{error}</p>}
+
         <div className="flex flex-col gap-3">
-          {filtered.length === 0
+          {loading ? <div className="text-center py-16 text-(--text-muted)">Loading orders…</div> : filtered.length === 0
             ? <div className="text-center py-16 text-(--text-muted)">No orders found.</div>
-            : filtered.map(o => <OrderCard key={o.id} order={o} onStatusChange={handleStatusChange}/>)
+            : filtered.map(o => <OrderCard key={o._id} order={o} onStatusChange={handleStatusChange}/>)
           }
         </div>
       </div>
